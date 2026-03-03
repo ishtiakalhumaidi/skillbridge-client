@@ -1,5 +1,3 @@
-import { env } from "@/env"; // Using your T3 env validator
-import { cookies } from "next/headers";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "https://skillbridge-server-xi.vercel.app";
