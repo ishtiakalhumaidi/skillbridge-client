@@ -1,4 +1,10 @@
-import { BookOpen, Calendar, LayoutDashboard, Users, FileText } from "lucide-react";
+import {
+  BookOpen,
+  Calendar,
+  LayoutDashboard,
+  Users,
+  FileText,
+} from "lucide-react";
 
 export const studentRoutes = [
   {
@@ -13,7 +19,7 @@ export const studentRoutes = [
   },
   {
     title: "Find Tutors",
-    url: "/tutors",
+    url: "/dashboard",
     icon: Users,
   },
 ];
