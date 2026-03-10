@@ -32,7 +32,7 @@ export default function LoginPage() {
         return;
       }
 
-      // Strict Uppercase Check based on Better Auth / Prisma Enum
+      
       const userRole = (data?.user as { role?: string })?.role;
 
       if (userRole === "TUTOR") {
@@ -43,7 +43,7 @@ export default function LoginPage() {
         router.push("/dashboard/bookings");
       }
 
-      router.refresh(); // Force a refresh so the Navbar immediately catches the new cookie
+      router.refresh(); 
     },
   });
 

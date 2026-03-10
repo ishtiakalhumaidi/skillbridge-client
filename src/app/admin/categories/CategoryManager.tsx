@@ -91,10 +91,8 @@ export function CategoryManager({ initialCategories }: { initialCategories: any[
         <h2 className="text-xl font-semibold">All Categories</h2>
         
         <Dialog open={isDialogOpen} onOpenChange={(open) => !open ? handleCloseDialog() : setIsDialogOpen(true)}>
-          <DialogTrigger   className="inline-flex shrink-0 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
-            <Button >
-              <Plus className="mr-2 h-4 w-4" /> Add Category
-            </Button>
+          <DialogTrigger    className="inline-flex shrink-0 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50">
+          Add Category
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>

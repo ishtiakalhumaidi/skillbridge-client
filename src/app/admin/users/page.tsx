@@ -5,7 +5,7 @@ async function getAllUsers() {
   try {
     const cookieStore = await cookies();
     
-    // Make sure your backend v1 URL is correct
+  
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/users`, {
       headers: {
         Cookie: cookieStore.toString(),
@@ -16,7 +16,8 @@ async function getAllUsers() {
     if (!res.ok) return [];
     
     const responseData = await res.json();
-    return responseData?.data || [];
+    // console.log(responseData);
+    return responseData?.data?.users || [];
   } catch (error) {
     console.error("Error fetching users:", error);
     return [];

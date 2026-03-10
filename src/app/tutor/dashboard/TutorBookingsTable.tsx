@@ -19,6 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
+  DropdownMenuGroup
 } from "@/components/ui/dropdown-menu"
 import { bookingsApi } from "@/lib/api"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -105,29 +106,36 @@ export function TutorBookingsTable({ initialBookings, currentUserId }: { initial
                 {/* Only show actions if the booking is currently CONFIRMED */}
                 {booking.status === "CONFIRMED" ? (
                   <DropdownMenu>
-                    <DropdownMenuTrigger className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-8 w-8 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring">
-                      {loadingId === booking.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <MoreHorizontal className="h-4 w-4" />
-                      )}
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Manage Session</DropdownMenuLabel>
-                      <DropdownMenuItem 
-                        onClick={() => handleStatusUpdate(booking.id, "COMPLETED")}
-                        className="text-green-600 focus:text-green-600 cursor-pointer"
-                      >
-                        <CheckCircle className="mr-2 h-4 w-4" /> Mark as Completed
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleStatusUpdate(booking.id, "CANCELLED")}
-                        className="text-destructive focus:text-destructive cursor-pointer"
-                      >
-                        <XCircle className="mr-2 h-4 w-4" /> Cancel Booking
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+  <DropdownMenuTrigger className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground h-8 w-8">
+    {loadingId === booking.id ? (
+      <Loader2 className="h-4 w-4 animate-spin" />
+    ) : (
+      <MoreHorizontal className="h-4 w-4" />
+    )}
+  </DropdownMenuTrigger>
+
+  <DropdownMenuContent align="end">
+    <DropdownMenuGroup>
+      <DropdownMenuLabel>Manage Session</DropdownMenuLabel>
+
+      <DropdownMenuItem
+        onClick={() => handleStatusUpdate(booking.id, "COMPLETED")}
+        className="text-green-600 cursor-pointer"
+      >
+        <CheckCircle className="mr-2 h-4 w-4" />
+        Mark as Completed
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        onClick={() => handleStatusUpdate(booking.id, "CANCELLED")}
+        className="text-destructive cursor-pointer"
+      >
+        <XCircle className="mr-2 h-4 w-4" />
+        Cancel Booking
+      </DropdownMenuItem>
+    </DropdownMenuGroup>
+  </DropdownMenuContent>
+</DropdownMenu>
                 ) : (
                   <span className="text-xs text-muted-foreground italic">No actions available</span>
                 )}

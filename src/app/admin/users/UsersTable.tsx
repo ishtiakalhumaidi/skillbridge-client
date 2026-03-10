@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Loader2, ShieldAlert, ShieldCheck, MoreHorizontal } from "lucide-react"
+import { Loader2, ShieldAlert, ShieldCheck, MoreHorizontal, UserCog } from "lucide-react"
 
 import {
   Table,
@@ -12,14 +12,20 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+  DropdownMenuGroup,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator
+} from "@/components/ui/dropdown-menu";
 import { adminApi } from "@/lib/api"
 import { format } from "date-fns"
 
@@ -42,6 +48,22 @@ export function UsersTable({ initialUsers }: { initialUsers: any[] }) {
     } catch (error) {
       console.error("Failed to update user status", error)
       alert("Failed to update user status. Please try again.")
+    } finally {
+      setLoadingId(null)
+    }
+  }
+
+  const handleRoleUpdate = async (userId: string, newRole: string) => {
+    try {
+      setLoadingId(userId)
+      await adminApi.updateUserRole(userId, newRole)
+      
+      setUsers(users.map(user => 
+        user.id === userId ? { ...user, role: newRole } : user
+      ))
+    } catch (error) {
+      console.error("Failed to update user role", error)
+      alert("Failed to update user role. Please try again.")
     } finally {
       setLoadingId(null)
     }
@@ -92,18 +114,50 @@ export function UsersTable({ initialUsers }: { initialUsers: any[] }) {
                       <MoreHorizontal className="h-4 w-4" />
                     )}
                   </DropdownMenuTrigger>
+
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Manage User</DropdownMenuLabel>
-                    <DropdownMenuItem 
-                      onClick={() => handleStatusUpdate(user.id, user.status)}
-                      className={user.status === "banned" ? "text-green-600 focus:text-green-600" : "text-destructive focus:text-destructive"}
-                    >
-                      {user.status === "banned" ? (
-                        <><ShieldCheck className="mr-2 h-4 w-4" /> Unban User</>
-                      ) : (
-                        <><ShieldAlert className="mr-2 h-4 w-4" /> Ban User</>
-                      )}
-                    </DropdownMenuItem>
+                    <DropdownMenuGroup>
+                      <DropdownMenuLabel>Manage User</DropdownMenuLabel>
+
+                      {/* Submenu for changing roles */}
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                          <UserCog className="mr-2 h-4 w-4" />
+                          Change Role
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuRadioGroup value={user.role} onValueChange={(val) => handleRoleUpdate(user.id, val)}>
+                            <DropdownMenuRadioItem value="STUDENT">Student</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="TUTOR">Tutor</DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="ADMIN">Admin</DropdownMenuRadioItem>
+                          </DropdownMenuRadioGroup>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+
+                      <DropdownMenuSeparator />
+
+                      <DropdownMenuItem
+                        onClick={() => handleStatusUpdate(user.id, user.status)}
+                        className={
+                          user.status === "banned"
+                            ? "text-green-600 focus:text-green-600"
+                            : "text-destructive focus:text-destructive"
+                        }
+                      >
+                        {user.status === "banned" ? (
+                          <>
+                            <ShieldCheck className="mr-2 h-4 w-4" />
+                            Unban User
+                          </>
+                        ) : (
+                          <>
+                            <ShieldAlert className="mr-2 h-4 w-4" />
+                            Ban User
+                          </>
+                        )}
+                      </DropdownMenuItem>
+
+                    </DropdownMenuGroup>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

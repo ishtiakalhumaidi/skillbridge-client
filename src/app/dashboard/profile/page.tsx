@@ -16,7 +16,6 @@ export default function StudentProfilePage() {
   const [success, setSuccess] = useState(false)
 
   const form = useForm({
-    // We only initialize the form if session exists, so we safely default to empty strings here
     defaultValues: {
       name: session?.user?.name || "",
       image: session?.user?.image || "",

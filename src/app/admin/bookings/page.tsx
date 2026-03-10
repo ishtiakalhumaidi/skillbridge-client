@@ -5,7 +5,6 @@ async function getAllBookings() {
   try {
     const cookieStore = await cookies();
     
-    // Fetch all bookings for the admin
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/bookings`, {
       headers: {
         Cookie: cookieStore.toString(),
@@ -16,7 +15,8 @@ async function getAllBookings() {
     if (!res.ok) return [];
     
     const responseData = await res.json();
-    return responseData?.data || [];
+    // console.log(responseData);
+    return responseData?.data.bookings || [];
   } catch (error) {
     console.error("Error fetching admin bookings:", error);
     return [];

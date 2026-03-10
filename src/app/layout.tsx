@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Navbar } from "@/components/shared/Navbar";
 import { userService } from "@/service/user.service";
+import { Footer } from "@/components/shared/Footer";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrainsMono = JetBrains_Mono({
@@ -34,9 +35,9 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* Only pass the session object */}
           <Navbar session={session} />
           <main className="flex-1">{children}</main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

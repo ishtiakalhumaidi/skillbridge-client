@@ -20,7 +20,6 @@ export function TutorSubjectsManager({
   const [removingId, setRemovingId] = useState<string | null>(null)
   const [error, setError] = useState("")
 
-  // Filter out categories the tutor is already teaching so they don't see duplicates in the dropdown
   const availableCategories = allCategories.filter(
     (cat) => !activeSubjects.some((sub: any) => sub.categoryId === cat.id)
   )
@@ -93,7 +92,7 @@ export function TutorSubjectsManager({
         )}
       </div>
 
-      {/* Add New Subject Controls */}
+    
       <div className="flex flex-col sm:flex-row gap-3 items-end pt-2 border-t">
         <div className="w-full sm:flex-1 space-y-2">
           <label className="text-sm font-medium leading-none">Add a New Subject</label>

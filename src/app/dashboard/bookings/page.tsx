@@ -76,10 +76,10 @@ export default async function BookingsPage() {
                   <TableHead>Date</TableHead>
                   <TableHead>Time</TableHead>
                   <TableHead>Tutor</TableHead>
-                <TableHead>Subject</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead> 
-            </TableRow>
+                  <TableHead>Subject</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Actions</TableHead> 
+                </TableRow>
               </TableHeader>
               <TableBody>
                 {bookings.map((booking: any) => (
@@ -95,19 +95,28 @@ export default async function BookingsPage() {
                         <span className="font-medium">{booking.tutor?.user?.name || "Unknown Tutor"}</span>
                       </div>
                     </TableCell>
-                  <TableCell>
-                  <StatusBadge status={booking.status} />
-                </TableCell>
-                {/* NEW CELL: Only show button if status is COMPLETED */}
-                <TableCell className="text-right">
-                  {booking.status === "COMPLETED" && (
-                    <ReviewDialog 
-                      bookingId={booking.id} 
-                      tutorName={booking.tutor?.user?.name || "Tutor"} 
-                    />
-                  )}
-                </TableCell>
-              </TableRow>
+                    
+                    {/* ADDED MISSING SUBJECT CELL HERE */}
+                    <TableCell>
+                      <Badge variant="outline" className="font-normal">
+                        {booking.category?.name || "Subject N/A"}
+                      </Badge>
+                    </TableCell>
+
+                    <TableCell>
+                      <StatusBadge status={booking.status} />
+                    </TableCell>
+                    
+                    {/* Actions cell */}
+                    <TableCell className="text-right">
+                      {booking.status === "COMPLETED" && (
+                        <ReviewDialog 
+                          bookingId={booking.id} 
+                          tutorName={booking.tutor?.user?.name || "Tutor"} 
+                        />
+                      )}
+                    </TableCell>
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>

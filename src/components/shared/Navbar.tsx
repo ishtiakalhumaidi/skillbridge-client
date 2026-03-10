@@ -6,13 +6,15 @@ import { Menu, Loader2, LogOut, LayoutDashboard, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "./ThemeToggle";
+import { signOut } from "@/lib/auth-client";
+
 
 export function Navbar({ session }: { session: any }) {
   const router = useRouter();
-  
+
   const sessionData = session?.data;
-  
-  const isPending = false; 
+
+  const isPending = false;
 
   const navLinks = [
     { name: "Browse Tutors", href: "/tutors" },
@@ -28,15 +30,12 @@ export function Navbar({ session }: { session: any }) {
 
   const handleLogout = async () => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/sign-out`, {
-        method: "POST",
-      });
-      
-      router.push("/login");
-      router.refresh(); 
+      await signOut();
+      router.push("/");
+      router.refresh();
     } catch (error) {
       console.error("Logout failed:", error);
-    }
+    } 
   };
 
   return (
@@ -127,7 +126,9 @@ export function Navbar({ session }: { session: any }) {
                     <>
                       <div className="flex items-center gap-2 px-2 pb-2 mb-2 border-b text-sm text-muted-foreground">
                         <User className="h-4 w-4" />
-                        <span className="truncate">{sessionData.user?.email}</span>
+                        <span className="truncate">
+                          {sessionData.user?.email}
+                        </span>
                       </div>
                       <Link href={getDashboardLink()}>
                         <button className="w-full inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 gap-2">
