@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useForm } from "@tanstack/react-form"
-import { zodValidator } from "@tanstack/zod-form-adapter"
 import { z } from "zod"
 import { Loader2, Star } from "lucide-react"
 import { useRouter } from "next/navigation"
@@ -29,7 +28,6 @@ export function ReviewDialog({ bookingId, tutorName }: { bookingId: string; tuto
       rating: 5,
       comment: "",
     },
-    validatorAdapter: zodValidator(),
     onSubmit: async ({ value }) => {
       setError("")
       try {

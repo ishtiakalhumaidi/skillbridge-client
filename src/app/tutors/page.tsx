@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Star, GraduationCap } from "lucide-react"
+import { Star, GraduationCap, X } from "lucide-react"
 
 import {
   Card,
@@ -13,19 +13,33 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
-// A safer fetch function that won't crash on URL construction
-async function getTutors(searchQuery?: string) {
+// 1. Fetch Categories for the filter bar
+async function getCategories() {
   try {
-    // Safely construct the URL using standard strings
-    let fetchUrl = `${process.env.NEXT_PUBLIC_API_URL}/tutors`;
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories?limit=50`, {
+      cache: "no-store", 
+    });
+    if (!res.ok) return [];
+    const responseData = await res.json();
+    return responseData?.data?.categories || [];
+  } catch (error) {
+    return [];
+  }
+}
+
+// 2. Safely fetch tutors, now supporting the categoryId parameter
+async function getTutors(searchQuery?: string, categoryId?: string) {
+  try {
+    let fetchUrl = `${process.env.NEXT_PUBLIC_API_URL}/tutors?`;
     
-    if (searchQuery) {
-      // Add the query parameter if a search exists
-      fetchUrl += `?search=${encodeURIComponent(searchQuery)}`;
-    }
+    const params = new URLSearchParams();
+    if (searchQuery) params.append("search", searchQuery);
+    if (categoryId) params.append("categoryId", categoryId); // Assuming your backend supports this!
+    
+    fetchUrl += params.toString();
 
     const res = await fetch(fetchUrl, {
-      cache: "no-store", // Ensures fresh data every time
+      cache: "no-store",
     });
     
     if (!res.ok) throw new Error("Failed to fetch tutors");
@@ -41,29 +55,79 @@ async function getTutors(searchQuery?: string) {
 export default async function TutorsPage({ 
   searchParams 
 }: { 
-  searchParams: Promise<{ search?: string }> 
+  searchParams: Promise<{ search?: string; categoryId?: string }> 
 }) {
-  // Await the searchParams Promise in Next.js 16
   const resolvedParams = await searchParams;
-  const tutors = await getTutors(resolvedParams.search);
+  const currentSearch = resolvedParams.search;
+  const currentCategory = resolvedParams.categoryId;
+
+  // Run both fetches in parallel for maximum speed!
+  const [tutors, categories] = await Promise.all([
+    getTutors(currentSearch, currentCategory),
+    getCategories()
+  ]);
+
+  // Helper function to build URLs that preserve the search query while switching categories
+  const buildFilterUrl = (categoryId?: string) => {
+    const params = new URLSearchParams();
+    if (currentSearch) params.set("search", currentSearch);
+    if (categoryId) params.set("categoryId", categoryId);
+    return `/tutors?${params.toString()}`;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="flex flex-col space-y-4 mb-8">
         <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-          {resolvedParams.search ? `Search Results for "${resolvedParams.search}"` : "Expert Tutors"}
+          {currentSearch ? `Search Results for "${currentSearch}"` : "Expert Tutors"}
         </h1>
         <p className="text-muted-foreground max-w-[700px] text-lg">
-          {resolvedParams.search 
-            ? "Here are the tutors matching your search." 
-            : "Browse our verified professionals and find the perfect match for your learning journey."}
+          Browse our verified professionals and find the perfect match for your learning journey.
         </p>
       </div>
 
+      {/* Category Filter Bar */}
+      {categories.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Filter by Subject</h2>
+            {/* Clear Filters Button */}
+            {(currentCategory || currentSearch) && (
+              <Link href="/tutors">
+                <Button variant="ghost" size="sm" className="h-8 text-xs text-muted-foreground hover:text-foreground">
+                  <X className="mr-1 h-3 w-3" /> Clear Filters
+                </Button>
+              </Link>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Link href={buildFilterUrl(undefined)}>
+              <Badge 
+                variant={!currentCategory ? "default" : "outline"} 
+                className="px-3 py-1.5 cursor-pointer hover:bg-primary/90 transition-colors text-sm"
+              >
+                All Subjects
+              </Badge>
+            </Link>
+            {categories.map((cat: any) => (
+              <Link key={cat.id} href={buildFilterUrl(cat.id)}>
+                <Badge 
+                  variant={currentCategory === cat.id ? "default" : "secondary"} 
+                  className="px-3 py-1.5 cursor-pointer hover:bg-primary/80 transition-colors text-sm font-medium"
+                >
+                  {cat.name}
+                </Badge>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tutors Grid */}
       {tutors.length === 0 ? (
         <div className="text-center py-20 border rounded-lg bg-card text-muted-foreground">
-          {resolvedParams.search 
-            ? `No tutors found matching "${resolvedParams.search}". Try a different subject or name!` 
+          {currentSearch || currentCategory 
+            ? "No tutors found matching your filters. Try selecting a different subject!" 
             : "No tutors found at the moment. Please check back later!"}
         </div>
       ) : (

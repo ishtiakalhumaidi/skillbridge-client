@@ -7,17 +7,31 @@ export const api = axios.create({
   },
   withCredentials: true,
 });
+export const auth_api = axios.create({
+  baseURL: "https://skillbridge-server-xi.vercel.app/api/auth",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: true,
+});
 
 export const authApi = {
   login: async (data: any) => {
-    // Better Auth default login route
-    return api.post("/auth/sign-in/email", data);
+    return auth_api.post("/sign-in/email", data);
   },
   register: async (data: any) => {
     // Better Auth default register route
-    return api.post("/auth/sign-up/email", data);
+    return auth_api.post("/sign-up/email", data);
   },
+  session: async () => {
+    return auth_api.get("/get-session");
+  },
+  logout: async () => {
+    return auth_api.post("/sign-out");
+  }
 };
+
+
 
 export const tutorSubjectsApi = {
   add: async (categoryId: string) => {
@@ -26,16 +40,19 @@ export const tutorSubjectsApi = {
     return response.data;
   },
   remove: async (categoryId: string) => {
-   
-    const response = await api.delete("/tutor-subjects", { 
-      params: { categoryId } 
+    const response = await api.delete("/tutor-subjects", {
+      params: { categoryId },
     });
     return response.data;
-  }
+  },
 };
 
 export const tutorsApi = {
-  create: async (data: { headline: string; bio: string; hourlyRate: number }) => {
+  create: async (data: {
+    headline: string;
+    bio: string;
+    hourlyRate: number;
+  }) => {
     const response = await api.post("/tutors", data);
     return response.data;
   },
@@ -104,7 +121,6 @@ export const adminApi = {
     return response.data;
   },
   getAllBookings: async () => {
-   
     const response = await api.get("/admin/bookings");
     return response.data;
   },

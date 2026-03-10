@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useForm } from "@tanstack/react-form"
-import { zodValidator } from "@tanstack/zod-form-adapter"
+
 import { z } from "zod"
 import { Loader2, Plus, Pencil, Trash2, FolderOpen } from "lucide-react"
 
@@ -37,7 +37,6 @@ export function CategoryManager({ initialCategories }: { initialCategories: any[
     defaultValues: {
       name: editingCategory?.name || "",
     },
-    validatorAdapter: zodValidator(),
     onSubmit: async ({ value }) => {
       setError("")
       try {
@@ -127,7 +126,7 @@ export function CategoryManager({ initialCategories }: { initialCategories: any[
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       placeholder="e.g. Mathematics, Programming"
                     />
-                    {field.state.meta.errors ? <p className="text-sm text-destructive">{field.state.meta.errors.map(e => typeof e === 'string' ? e : e.message).join(", ")}</p> : null}
+                 {field.state.meta.errors.map(e => typeof e === 'string' ? e : e?.message).filter(Boolean).join(", ")}
                   </div>
                 )}
               />
