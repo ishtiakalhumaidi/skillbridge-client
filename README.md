@@ -4,6 +4,14 @@ SkillBridge is a modern, full-stack platform designed to connect students with e
 
 ---
 
+## 🔗 Project Links
+
+- **Backend GitHub Repository:** [https://github.com/ishtiakalhumaidi/skillbridge-server.git](https://github.com/ishtiakalhumaidi/skillbridge-server.git)
+- **Live Website:** [SkillBridge](https://skillbridge-iah.vercel.app/)
+- **Backend Live API:** [https://skillbridge-server-xi.vercel.app/](https://skillbridge-server-xi.vercel.app/)
+
+---
+
 ## 🚀 Features
 
 - **Role-Based Access Control (RBAC):** Dedicated flows and dashboards for Students, Tutors, and Admins protected by Next.js Proxy middleware.
