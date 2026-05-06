@@ -1,52 +1,42 @@
-import { Search, CalendarCheck, Trophy } from "lucide-react";
-
 export function HowItWorks() {
   const steps = [
     {
-      id: 1,
-      title: "Find a Tutor",
-      description: "Search by subject, review profiles, and check out tutor ratings to find your perfect match.",
-      icon: <Search className="h-8 w-8 text-primary" />,
+      id: "01",
+      title: "Discover.",
+      description: "Search by subject, review verified profiles, and find the perfect mentor tailored to your learning style.",
     },
     {
-      id: 2,
-      title: "Book a Time",
-      description: "View the tutor's live availability and instantly lock in a time slot that works for your schedule.",
-      icon: <CalendarCheck className="h-8 w-8 text-primary" />,
+      id: "02",
+      title: "Schedule.",
+      description: "View live availability and instantly lock in a time slot that seamlessly fits your calendar.",
     },
     {
-      id: 3,
-      title: "Start Learning",
-      description: "Connect with your tutor, achieve your goals, and leave a review to help others on their journey.",
-      icon: <Trophy className="h-8 w-8 text-primary" />,
+      id: "03",
+      title: "Master.",
+      description: "Connect in a secure environment, achieve your goals, and leave feedback for the community.",
     },
   ];
 
   return (
-    <section id="how-it-works" className="w-full py-24 bg-muted/30 border-y">
-      <div className="container mx-auto px-4 md:px-6">
-        <div className="flex flex-col items-center text-center space-y-4 mb-16">
-          <h2 className="text-4xl font-bold tracking-tight">How SkillBridge Works</h2>
-          <p className="text-muted-foreground max-w-[700px] text-lg">
-            Your journey to mastering a new skill is just three simple steps away.
-          </p>
-        </div>
+    <section id="how-it-works" className="w-full py-32 border-t border-foreground/10 bg-foreground/5">
+      <div className="container mx-auto px-6 md:px-12">
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center max-w-5xl mx-auto relative">
-          {/* Connecting line for desktop */}
-          <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-0.5 bg-border -z-10" />
-          
+        <h2 className="text-5xl md:text-7xl font-head tracking-tighter mb-24 text-center text-foreground">
+          Simplicity by design.
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-12 max-w-6xl mx-auto">
           {steps.map((step) => (
-            <div key={step.id} className="flex flex-col items-center space-y-6 relative group">
-              <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-background border shadow-xl shadow-primary/5 group-hover:-translate-y-2 transition-transform duration-300">
-                {step.icon}
+            <div key={step.id} className="flex flex-col relative group">
+              <div className="text-8xl md:text-9xl font-head tracking-tighter text-foreground/10 mb-8 transition-colors duration-500 group-hover:text-primary/20">
+                {step.id}
               </div>
-              <div className="space-y-3 px-2">
-                <h3 className="text-2xl font-bold">{step.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
-              </div>
+              <h3 className="text-3xl font-bold tracking-tight text-foreground mb-4">
+                {step.title}
+              </h3>
+              <p className="text-lg text-foreground/60 leading-relaxed font-medium">
+                {step.description}
+              </p>
             </div>
           ))}
         </div>

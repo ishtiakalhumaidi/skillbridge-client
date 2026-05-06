@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
 export const api = axios.create({
@@ -28,11 +29,23 @@ export const authApi = {
   },
   logout: async () => {
     return auth_api.post("/sign-out");
-  }
+  },
 };
 
+const buildQuery = (params?: Record<string, any>) => {
+  if (!params) return "";
+  const query = new URLSearchParams(
+    params as Record<string, string>,
+  ).toString();
+  return query ? `?${query}` : "";
+};
 
-
+export const paymentsApi = {
+  createCheckout: async (bookingId: string) => {
+    const response = await api.post("/payments/create-checkout", { bookingId });
+    return response.data;
+  },
+};
 export const tutorSubjectsApi = {
   add: async (categoryId: string) => {
     const response = await api.post("/tutor-subjects", { categoryId });
@@ -53,8 +66,8 @@ export const tutorsApi = {
     const response = await api.post("/tutors", data);
     return response.data;
   },
-  getAll: async () => {
-    const response = await api.get("/tutors");
+  getAll: async (params?: Record<string, any>) => {
+    const response = await api.get(`/tutors${buildQuery(params)}`);
     return response.data;
   },
   getById: async (id: string) => {
@@ -83,12 +96,21 @@ export const bookingsApi = {
     const response = await api.post("/bookings", data);
     return response.data;
   },
-  getMyBookings: async () => {
-    const response = await api.get("/bookings/my-bookings");
+  getMyBookings: async (params?: Record<string, any>) => {
+    const response = await api.get(
+      `/bookings/my-bookings${buildQuery(params)}`,
+    );
     return response.data;
   },
   updateStatus: async (id: string, status: string) => {
     const response = await api.patch(`/bookings/${id}/status  `, { status });
+    return response.data;
+  },
+
+  updateMeetingLink: async (id: string, meetingLink: string) => {
+    const response = await api.patch(`/bookings/${id}/meeting-link`, {
+      meetingLink,
+    });
     return response.data;
   },
 };
@@ -121,8 +143,8 @@ export const adminApi = {
     const response = await api.patch(`/admin/users/${id}/role`, { role });
     return response.data;
   },
-  getAllBookings: async () => {
-    const response = await api.get("/admin/bookings");
+  getAllBookings: async (params?: Record<string, any>) => {
+    const response = await api.get(`/admin/bookings${buildQuery(params)}`);
     return response.data;
   },
 };
