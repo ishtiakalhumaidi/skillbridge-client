@@ -18,7 +18,7 @@
 
 SkillBridge is a full-stack tutoring marketplace that connects students with expert tutors. The frontend is a **Next.js 16** application built with **TypeScript** and the **App Router**, featuring an Edge middleware proxy for session-based role routing, a dual-font design system, domain-driven API services, and a complete booking lifecycle from discovery to post-session review.
 
-> 🔗 **Live:** [SkillBridge](https://skillbridge-client.vercel.app)  
+> 🔗 **Live:** [SkillBridge](https://skillbridge-iah.vercel.app)  
 > 🔗 **Backend Repo:** [skillbridge-server](https://github.com/ishtiakalhumaidi/skillbridge-server.git)  
 > 🔗 **Backend API:** [https://skillbridge-server-xi.vercel.app](https://skillbridge-server-xi.vercel.app/)
 
