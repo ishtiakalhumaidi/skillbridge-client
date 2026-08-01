@@ -7,80 +7,125 @@ import {
   CalendarDays,
   LayoutDashboard,
   UserCircle,
-  ChevronRight,
   Users,
   Tags,
   CalendarCheck,
   BookOpen,
+  ChevronRight,
 } from "lucide-react";
+
+const roleConfig = {
+  ADMIN: {
+    title: "Admin Control",
+    label: "Admin",
+    links: [
+      { href: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
+      { href: "/admin/users", label: "Manage Users", icon: Users },
+      { href: "/admin/categories", label: "Categories", icon: Tags },
+      { href: "/admin/bookings", label: "All Bookings", icon: CalendarCheck },
+    ],
+  },
+  TUTOR: {
+    title: "Tutor Portal",
+    label: "Tutor",
+    links: [
+      { href: "/tutor/dashboard", label: "Command Center", icon: LayoutDashboard },
+      { href: "/tutor/sessions", label: "Sessions", icon: CalendarCheck },
+      { href: "/tutor/availability", label: "Availability", icon: CalendarDays },
+      { href: "/tutor/profile", label: "Profile Settings", icon: UserCircle },
+    ],
+  },
+  STUDENT: {
+    title: "Student Portal",
+    label: "Student",
+    links: [
+      { href: "/student/dashboard/bookings", label: "My Bookings", icon: BookOpen },
+      { href: "/student/dashboard/profile", label: "Profile Settings", icon: UserCircle },
+    ],
+  },
+};
 
 export function DashboardSidebar({ role }: { role: string }) {
   const pathname = usePathname();
 
-  const adminLinks = [
-    { href: "/admin", label: "Overview", icon: LayoutDashboard },
-    { href: "/admin/users", label: "Manage Users", icon: Users },
-    { href: "/admin/categories", label: "Categories", icon: Tags },
-    { href: "/admin/bookings", label: "All Bookings", icon: CalendarCheck },
-  ];
+  const resolvedRole =
+    role === "ADMIN" || pathname.startsWith("/admin")
+      ? "ADMIN"
+      : role === "TUTOR" || pathname.startsWith("/tutor")
+      ? "TUTOR"
+      : "STUDENT";
 
-  const tutorLinks = [
-    { href: "/tutor/dashboard", label: "Command Center", icon: LayoutDashboard },
-    { href: "/tutor/availability", label: "Availability", icon: CalendarDays },
-    { href: "/tutor/profile", label: "Profile Settings", icon: UserCircle },
-  ];
+  const config = roleConfig[resolvedRole as keyof typeof roleConfig];
 
-  const studentLinks = [
-    { href: "/student/dashboard/bookings", label: "My Bookings", icon: BookOpen },
-    { href: "/student/dashboard/profile", label: "Profile Settings", icon: UserCircle },
-  ];
-
-  let navItems = studentLinks;
-  let title = "Student Portal";
-
-  if (role === "ADMIN" || pathname.startsWith("/admin")) {
-    navItems = adminLinks;
-    title = "Admin Control";
-  } else if (role === "TUTOR" || pathname.startsWith("/tutor")) {
-    navItems = tutorLinks;
-    title = "Tutor Portal";
-  }
+  const isActive = (href: string, exact?: boolean) =>
+    exact ? pathname === href : pathname === href || pathname.startsWith(href + "/");
 
   return (
-    <aside className="w-full md:w-72 shrink-0 space-y-8 mb-8 md:mb-0">
-      <div className="flex items-center gap-3 px-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-          <LayoutDashboard className="h-5 w-5" />
+    <aside className="w-full md:w-64 lg:w-72 shrink-0">
+      {/* Portal label */}
+      <div className="flex items-center gap-3 px-4 mb-6">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/[0.08] text-primary shrink-0">
+          <LayoutDashboard className="h-4 w-4" />
         </div>
-        <h2 className="text-sm font-bold uppercase tracking-widest text-foreground/60">
-          {title}
-        </h2>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-foreground/35">
+            {config.label}
+          </p>
+          <p className="text-sm font-bold text-foreground/80 leading-tight">
+            {config.title}
+          </p>
+        </div>
       </div>
 
-      <nav className="flex flex-col space-y-2">
-        {navItems.map((item) => {
+      {/* Divider */}
+      <div className="mx-4 mb-4 h-px bg-foreground/[0.06]" />
+
+      {/* Nav */}
+      <nav className="flex flex-col gap-1 px-2">
+        {config.links.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
+          const active = isActive(item.href, (item as any).exact);
 
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`group flex items-center justify-between rounded-2xl px-5 py-4 text-sm font-bold transition-all duration-300
-              ${isActive 
-                ? "bg-foreground text-background shadow-lg" 
-                : "text-foreground/70 hover:bg-foreground/5 hover:text-foreground"
+              className={`group relative flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-250 ${
+                active
+                  ? "bg-foreground text-background shadow-sm"
+                  : "text-foreground/60 hover:bg-foreground/[0.05] hover:text-foreground"
               }`}
             >
-              <div className="flex items-center gap-4">
-                <Icon className={`h-5 w-5 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-background" : "text-foreground/50"}`} />
-                {item.label}
+              <div className="flex items-center gap-3 min-w-0">
+                <Icon
+                  className={`h-4 w-4 shrink-0 transition-colors duration-200 ${
+                    active ? "text-background" : "text-foreground/40 group-hover:text-foreground/70"
+                  }`}
+                />
+                <span className="truncate">{item.label}</span>
               </div>
-              {isActive && <ChevronRight className="h-4 w-4 opacity-70" />}
+              {active && (
+                <ChevronRight className="h-3.5 w-3.5 shrink-0 opacity-60" />
+              )}
             </Link>
           );
         })}
       </nav>
+
+      {/* Bottom card hint */}
+      <div className="mx-2 mt-8 rounded-xl border border-foreground/[0.07] bg-foreground/[0.025] p-4">
+        <p className="text-xs font-semibold text-foreground/50 mb-1">Need help?</p>
+        <p className="text-xs text-foreground/35 leading-relaxed mb-3">
+          Visit our help center or contact support.
+        </p>
+        <Link
+          href="#"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-primary/80 hover:text-primary transition-colors"
+        >
+          Get support
+          <ChevronRight className="h-3 w-3" />
+        </Link>
+      </div>
     </aside>
   );
 }

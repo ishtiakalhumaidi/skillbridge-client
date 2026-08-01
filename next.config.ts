@@ -1,11 +1,10 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   async rewrites() {
     return [
       {
-        source: "/api/auth/:path*",
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/:path*`,
+        source: "/api/:path*",
+        destination: "https://skillbridge-server-xi.vercel.app/api/:path*",
       },
     ];
   },

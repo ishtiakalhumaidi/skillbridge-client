@@ -1,7 +1,7 @@
 import { createAuthClient } from "better-auth/react";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_APP_URL,
+  // baseURL: process.env.NEXT_PUBLIC_BACKEND_URL || "https://skillbridge-server-xi.vercel.app",
   fetchOptions: { credentials: "include" },
 
   // plugins: [

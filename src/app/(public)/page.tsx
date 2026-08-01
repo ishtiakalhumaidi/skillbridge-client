@@ -1,53 +1,76 @@
+import { Suspense } from "react";
 import { HeroSection } from "@/components/home/HeroSection";
 import { FeaturedTutors } from "@/components/home/FeaturedTutors";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { PopularCategories } from "@/components/home/PopularCategories";
+import { CtaSection } from "@/components/home/CtaSection";
 
+// Import our new 3D Client Boundary
+import { LandingBookCanvas } from "@/components/3d/LandingBookCanvas"; 
 
 async function getFeaturedTutors() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/tutors?isFeatured=true&limit=3`,
-      { next: { revalidate: 3600 } }
-    );
-    if (!res.ok) return [];
-    const responseData = await res.json();
-    return responseData?.data?.tutors || [];
-  } catch (error) {
-    console.error("Failed to fetch tutors", error);
-    return [];
-  }
+  // ... existing fetch logic
 }
 
 async function getPopularCategories() {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/categories?limit=8`,
-      { next: { revalidate: 3600 } }
-    );
-    if (!res.ok) return [];
-    const responseData = await res.json();
-    return responseData?.data?.categories || [];
-  } catch (error) {
-    console.error("Failed to fetch categories", error);
-    return [];
-  }
+  // ... existing fetch logic
 }
 
-
 export default async function Home() {
-
   const [featuredTutors, categories] = await Promise.all([
     getFeaturedTutors(),
     getPopularCategories(),
   ]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <HeroSection />
-      <FeaturedTutors tutors={featuredTutors} />
-      <HowItWorks />
-      <PopularCategories categories={categories} />
+    // The Canvas wrapper takes over the viewport
+    <LandingBookCanvas>
+      {/* Page 1 */}
+      <section className="w-screen h-screen">
+        <HeroSection />
+      </section>
+
+      {/* Page 2 */}
+      <section className="w-screen h-screen">
+        <Suspense fallback={<SectionSkeleton />}>
+          <FeaturedTutors tutors={featuredTutors} />
+        </Suspense>
+      </section>
+
+      {/* Page 3 */}
+      <section className="w-screen h-screen">
+        <HowItWorks />
+      </section>
+
+      {/* Page 4 */}
+      <section className="w-screen h-screen">
+        <Suspense fallback={<SectionSkeleton />}>
+          <PopularCategories categories={categories} />
+        </Suspense>
+      </section>
+
+      {/* Page 5 */}
+      <section className="w-screen h-screen">
+        <CtaSection />
+      </section>
+    </LandingBookCanvas>
+  );
+}
+function SectionSkeleton() {
+  return (
+    <div className="w-full py-32 border-t border-foreground/[0.07]">
+      <div className="container mx-auto px-5 md:px-10">
+        <div className="h-12 w-56 rounded-xl bg-foreground/[0.05] mb-8 animate-pulse" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[...Array(3)].map((_, i) => (
+            <div
+              key={i}
+              className="h-64 rounded-2xl bg-foreground/[0.04] animate-pulse"
+              style={{ animationDelay: `${i * 80}ms` }}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

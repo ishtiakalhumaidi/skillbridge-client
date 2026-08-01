@@ -2,45 +2,99 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Logo } from "@/components/shared/Logo";
 
+const stats = [
+  { value: "500+", label: "Expert tutors" },
+  { value: "10k+", label: "Sessions booked" },
+  { value: "4.9★", label: "Avg. rating" },
+];
+
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen w-full bg-background transition-colors duration-700">
-      
-      {/* LEFT SIDE - Premium Minimalist Visual Panel */}
-      <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-foreground/5 lg:flex p-16 border-r border-foreground/10">
-        
-        <div className="relative z-10 flex items-center gap-2 animate-in fade-in slide-in-from-left-8 duration-700 ease-out">
+    <div className="flex min-h-screen w-full bg-background transition-colors duration-500">
+
+      {/* ── LEFT PANEL ── */}
+      <div className="relative hidden lg:flex w-[45%] xl:w-1/2 flex-col justify-between overflow-hidden border-r border-foreground/[0.07] bg-foreground/[0.025] p-14 xl:p-16">
+
+        {/* Radial glows */}
+        <div className="pointer-events-none absolute inset-0 z-0">
+          <div className="absolute -top-1/4 -left-1/4 w-3/4 h-3/4 rounded-full bg-primary/[0.08] blur-[120px]" />
+          <div className="absolute -bottom-1/4 -right-1/4 w-3/4 h-3/4 rounded-full bg-foreground/[0.04] blur-[120px]" />
+        </div>
+
+        {/* Grid texture */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0 opacity-[0.025]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right,currentColor 1px,transparent 1px),linear-gradient(to bottom,currentColor 1px,transparent 1px)",
+            backgroundSize: "56px 56px",
+          }}
+        />
+
+        {/* Logo */}
+        <div className="relative z-10">
           <Logo />
         </div>
 
-        <div className="relative z-10 mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 ease-out delay-200 fill-mode-both">
-          <h2 className="text-6xl xl:text-7xl font-head tracking-tighter text-foreground leading-[1.1] mb-8">
+        {/* Main copy */}
+        <div className="relative z-10 space-y-6">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="h-px w-8 bg-primary" />
+            <span className="text-xs font-bold uppercase tracking-widest text-primary">SkillBridge</span>
+          </div>
+          <h2 className="text-5xl xl:text-6xl font-head tracking-tighter text-foreground leading-[0.92]">
             Master your craft.<br />
-            <span className="text-foreground/30">Zero limits.</span>
+            <span className="text-foreground/25">Zero limits.</span>
           </h2>
-          <p className="text-xl font-medium text-foreground/60 max-w-md leading-relaxed">
+          <p className="text-base font-medium text-foreground/50 max-w-sm leading-relaxed">
             Join an elite community of learners and mentors dedicated to absolute excellence.
           </p>
+
+          {/* Stats row */}
+          <div className="flex items-center gap-8 pt-4">
+            {stats.map(({ value, label }) => (
+              <div key={label}>
+                <p className="text-xl font-bold tracking-tight text-foreground">{value}</p>
+                <p className="text-xs font-medium text-foreground/40 mt-0.5">{label}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Minimalist decorative circles */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-           <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[120px] animate-pulse"></div>
-           <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-foreground/5 blur-[120px] animate-pulse" style={{ animationDelay: "2s" }}></div>
+        {/* Bottom brand mark */}
+        <div className="relative z-10">
+          <div className="flex items-center gap-2">
+            {/* Mini bridge SVG */}
+            <svg width="20" height="12" viewBox="0 0 40 24" fill="none" className="text-foreground/20">
+              <path d="M2 22 Q2 4 20 2 Q38 4 38 22" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+              <line x1="2" y1="22" x2="38" y2="22" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"/>
+            </svg>
+            <span className="text-xs font-medium text-foreground/25">Trusted by learners worldwide</span>
+          </div>
         </div>
       </div>
 
-      {/* RIGHT SIDE - The Form Container */}
-      <div className="relative flex w-full flex-col items-center justify-center lg:w-1/2 p-6 md:p-12">
-        <Link href="/" className="absolute top-8 left-8 flex items-center gap-2 text-sm font-bold tracking-widest uppercase text-foreground/50 hover:text-foreground transition-colors lg:hidden">
-          <ArrowLeft className="h-4 w-4" /> Home
+      {/* ── RIGHT PANEL ── */}
+      <div className="relative flex flex-1 flex-col items-center justify-center p-6 md:p-12">
+
+        {/* Mobile back link */}
+        <Link
+          href="/"
+          className="absolute top-6 left-6 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-foreground/40 hover:text-foreground transition-colors lg:hidden group"
+        >
+          <ArrowLeft className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5" />
+          Home
         </Link>
-        
-        <div className="w-full max-w-[420px] animate-in slide-in-from-bottom-4 fade-in duration-700 ease-out">
+
+        {/* Mobile logo */}
+        <div className="lg:hidden mb-10">
+          <Logo />
+        </div>
+
+        <div className="w-full max-w-[400px]">
           {children}
         </div>
       </div>
-      
     </div>
   );
 }

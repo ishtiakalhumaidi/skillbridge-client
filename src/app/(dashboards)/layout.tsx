@@ -12,30 +12,26 @@ async function getSession() {
     });
     if (!res.ok) return null;
     return await res.json();
-  } catch (error) {
-    return null;
-  }
+  } catch { return null; }
 }
 
 export default async function UnifiedDashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await getSession();
-
-  if (!session?.user) {
-    redirect("/login");
-  }
+  if (!session?.user) redirect("/login");
 
   const role = session.user.role as string;
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground transition-colors duration-700">
+    <div className="flex flex-col min-h-screen bg-background text-foreground transition-colors duration-500">
       <Navbar session={{ data: session }} />
-      
-      <div className="container mx-auto px-6 py-12 md:flex md:gap-16 max-w-7xl flex-1">
-        <DashboardSidebar role={role} />
-        
-        <main className="flex-1 min-h-[calc(100vh-10rem)]">
-          {children}
-        </main>
+
+      <div className="container mx-auto px-5 md:px-10 max-w-7xl flex-1">
+        <div className="flex flex-col md:flex-row gap-8 lg:gap-12 py-10 md:py-14">
+          <DashboardSidebar role={role} />
+          <main className="flex-1 min-w-0">
+            {children}
+          </main>
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: "/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
@@ -120,8 +120,8 @@ export const availabilityApi = {
     const response = await api.get("/availability/my-availability");
     return response.data;
   },
-  create: async (data: { day: string; startTime: string; endTime: string }) => {
-    const response = await api.post("/availability", data);
+  createBulk: async (data: { dates: string[]; startTime: string; endTime: string }) => {
+    const response = await api.post("/availability/bulk", data);
     return response.data;
   },
   delete: async (id: string) => {
